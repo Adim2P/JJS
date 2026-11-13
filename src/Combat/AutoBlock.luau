@@ -44,6 +44,11 @@ function AutoBlock:OnM1(player, targetCharacter, m1)
         return
     end
 
+    if m1 == 5 then
+        skip("m1_5_nonattack")
+        return
+    end
+
     local character = LocalPlayer.Character
     local root = character
         and character:FindFirstChild("HumanoidRootPart")
