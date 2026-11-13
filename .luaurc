@@ -1,0 +1,8 @@
+{
+  "globals": [
+    "loadfile",
+    "isrbxactive",
+    "keypress",
+    "keyrelease"
+  ]
+}
