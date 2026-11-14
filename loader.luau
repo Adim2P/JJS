@@ -1,4 +1,4 @@
-local ROOT = "https://raw.githubusercontent.com/Adim2P/JJS/stable/"
+local ROOT = "https://raw.githubusercontent.com/Adim2P/JJS/stable/loader.luau"
 
 local globals = getgenv()
 local previousRoot = globals.ShenanigansRemoteRoot
