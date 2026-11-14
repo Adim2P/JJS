@@ -1,17 +1,19 @@
-local ROOT = "https://raw.githubusercontent.com/Adim2P/JJS/stable/loader.luau"
+local ROOT = "https://raw.githubusercontent.com/Adim2P/JJS/stable/"
 
 local globals = getgenv()
 local previousRoot = globals.ShenanigansRemoteRoot
 
 globals.ShenanigansRemoteRoot = ROOT
 
-local source = (game :: any):HttpGet(ROOT .. "main.luau", true)
-assert(source ~= "", "Failed to download main.luau")
+local success, result = pcall(function()
+    local source = (game :: any):HttpGet(ROOT .. "main.luau", true)
+    assert(source ~= "", "Failed to download main.luau")
 
-local chunk, err = loadstring(source, "main.luau")
-assert(chunk, err)
+    local chunk, err = loadstring(source, "main.luau")
+    assert(chunk, err)
 
-local success, result = pcall(chunk)
+    return chunk()
+end)
 
 globals.ShenanigansRemoteRoot = previousRoot
 
