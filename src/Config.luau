@@ -6,7 +6,8 @@ local Config = {
     ScanInterval = 0.2,
 
     Features = {
-        AutoBlock = true,
+        AutoBlock = false,
+        FastInteract = false,
         ProximityTracking = false,
         DirectionalLock = false,
         DashDetection = false
