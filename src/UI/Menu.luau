@@ -22,7 +22,13 @@ local function createButton(parent, text, y)
     return button
 end
 
-function Menu.new(config, appState, onShutdown, onFastInteractChanged)
+function Menu.new(
+    config,
+    appState,
+    onShutdown,
+    onFastInteractChanged,
+    onShowHiddenKillsChanged
+)
     local self = setmetatable({}, Menu)
 
     local gui = Instance.new("ScreenGui")
@@ -31,7 +37,7 @@ function Menu.new(config, appState, onShutdown, onFastInteractChanged)
     gui.DisplayOrder = 100
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.fromOffset(200, 140)
+    frame.Size = UDim2.fromOffset(200, 173)
     frame.AnchorPoint = Vector2.new(0.5, 0)
     frame.Position = UDim2.new(0.5, 0, 0, 20)
     frame.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
@@ -170,7 +176,38 @@ function Menu.new(config, appState, onShutdown, onFastInteractChanged)
 
     updateFastCheckbox()
 
-    local shutdownButton = createButton(frame, "Shutdown", 103)
+    local killsCheckbox = checkbox:Clone()
+    killsCheckbox.Name = "ShowHiddenKillsCheckbox"
+    killsCheckbox.Position = UDim2.fromOffset(12, 101)
+    killsCheckbox.Parent = frame
+
+    local killsLabel = label:Clone()
+    killsLabel.Text = "Show Hidden Kills"
+    killsLabel.Position = UDim2.fromOffset(36, 98)
+    killsLabel.Parent = frame
+
+    local killsCheckmark = killsCheckbox:FindFirstChildOfClass("TextLabel")
+
+    local function updateKillsCheckbox()
+        local enabled = config.Features.ShowHiddenKills
+
+        killsCheckmark.Visible = enabled
+        killsCheckbox.BackgroundColor3 = enabled
+            and Color3.fromRGB(241, 242, 243)
+            or Color3.fromRGB(48, 48, 55)
+    end
+
+    killsCheckbox.Activated:Connect(function()
+        local enabled = not config.Features.ShowHiddenKills
+
+        config.Features.ShowHiddenKills = enabled
+        onShowHiddenKillsChanged(enabled)
+        updateKillsCheckbox()
+    end)
+
+    updateKillsCheckbox()
+
+    local shutdownButton = createButton(frame, "Shutdown", 134)
 
     shutdownButton.Activated:Connect(function()
         print("[Shenanigans] Shutdown button clicked")

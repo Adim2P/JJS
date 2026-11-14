@@ -30,11 +30,13 @@ local M1Detector = import("src/Combat/M1Detector.luau")
 local PlayerTracker = import("src/Tracking/PlayerTracker.luau")
 local Trace = import("src/Core/Trace.luau")
 local FastInteract = import("src/Features/FastInteract.luau")
+local ShowHiddenKills = import("src/Features/ShowHiddenKills.luau")
 
 
 -- Import Initiator
 local State = AppState.new()
 local fastInteract = FastInteract.new()
+local showHiddenKills = ShowHiddenKills.new()
 local trace = Trace.new(Config.Debug)
 local blockInput = Input.new(Config, State, trace)
 local defender = AutoBlock.new(Config, State, blockInput, trace)
@@ -56,6 +58,7 @@ local function shutdown()
     detector:Stop()
     blockInput:Stop()
     fastInteract:Stop()
+    showHiddenKills:Stop()
 
     if keyConnection then
         keyConnection:Disconnect()
@@ -75,9 +78,14 @@ local function shutdown()
     print("[Shenanigans] Application terminated.")
 end
 
-menu = Menu.new(Config, State, shutdown, function(enabled)
-    fastInteract:SetEnabled(enabled)
-end)
+menu = Menu.new(Config, State, shutdown,
+    function(enabled)
+        fastInteract:SetEnabled(enabled)
+    end,
+    function(enabled)
+        showHiddenKills:SetEnabled(enabled)
+    end
+)
 
 keyConnection = UserInputService.InputBegan:Connect(function(input, processed)
     if input.UserInputType == Enum.UserInputType.MouseButton1
