@@ -4,7 +4,7 @@ local Config = {
 
     TrackingRange = 25,
     ScanInterval = 0.2,
-    TintedVisionRange = 75,
+    TintedVisionRange = 300,
     TintedVisionScanInterval = 0.35,
 
     Features = {
