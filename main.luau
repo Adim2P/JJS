@@ -2,8 +2,18 @@ local UserInputService = game:GetService("UserInputService")
 
 local ROOT = "Roblox_Bullshit/"
 
-local function  import(path)
-    local chunk, err = loadfile(ROOT .. path)
+local function import(path)
+    local remoteRoot = getgenv().ShenanigansRemoteRoot
+    local chunk, err
+
+    if remoteRoot then
+        local source = (game :: any):HttpGet(remoteRoot .. path, true)
+        assert(source ~= "", "Failed to fetch: " .. path)
+
+        chunk, err = loadstring(source, path)
+    else
+        chunk, err = loadfile(ROOT .. path)
+    end
 
     assert(chunk, err or ("Failed to load: " .. path))
 

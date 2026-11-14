@@ -3,6 +3,7 @@
     "loadfile",
     "isrbxactive",
     "keypress",
-    "keyrelease"
+    "keyrelease",
+    "getgenv"
   ]
 }
