@@ -10,6 +10,7 @@ local function  import(path)
     return chunk()
 end
 
+-- Local Imports
 local Config = import("src/Config.luau")
 local AppState = import("src/Core/AppState.luau")
 local Menu = import("src/UI/Menu.luau")
@@ -18,19 +19,18 @@ local AutoBlock = import("src/Combat/AutoBlock.luau")
 local M1Detector = import("src/Combat/M1Detector.luau")
 local PlayerTracker = import("src/Tracking/PlayerTracker.luau")
 local Trace = import("src/Core/Trace.luau")
+local FastInteract = import("src/Features/FastInteract.luau")
 
 
+-- Import Initiator
 local State = AppState.new()
+local fastInteract = FastInteract.new()
 local trace = Trace.new(Config.Debug)
-
 local blockInput = Input.new(Config, State, trace)
-
 local defender = AutoBlock.new(Config, State, blockInput, trace)
-
 local detector = M1Detector.new(function(player, character, m1)
     defender:OnM1(player, character, m1)
 end, Config.Debug, trace)
-
 local tracker = PlayerTracker.new(detector, Config.Debug, trace)
 
 local menu
@@ -45,6 +45,7 @@ local function shutdown()
     tracker:Stop()
     detector:Stop()
     blockInput:Stop()
+    fastInteract:Stop()
 
     if keyConnection then
         keyConnection:Disconnect()
@@ -64,7 +65,9 @@ local function shutdown()
     print("[Shenanigans] Application terminated.")
 end
 
-menu = Menu.new(Config, State, shutdown)
+menu = Menu.new(Config, State, shutdown, function(enabled)
+    fastInteract:SetEnabled(enabled)
+end)
 
 keyConnection = UserInputService.InputBegan:Connect(function(input, processed)
     if input.UserInputType == Enum.UserInputType.MouseButton1
