@@ -79,17 +79,18 @@ function TintedVision:Scan()
             continue
         end
 
-        newClone.Name = "ShenanigansTintedVision"
+        newClone.Name = "Reveal"
         newClone.MaxDistance = self.Range
-        newClone.Enabled = true
+        newClone.Handle.Enabled = true
 
-        local handle = newClone:FindFirstChild("Handle")
-
-        if handle and handle:IsA("LayerCollector") then
-            handle.Enabled = true
+        for _, child in ipairs(newClone:GetDescendants()) do
+            if child:IsA("BillboardGui") or child:IsA("SurfaceGui") then
+                child.MaxDistance = self.Range
+            end
         end
 
         newClone.Parent = targetRoot
+
         self.Clones[player] = newClone
     end
 end
