@@ -117,6 +117,27 @@ function ShowHiddenKills:SetEnabled(enabled)
     if enabled then
         local connection = Players.PlayerAdded:Connect(function(player)
             self:WatchPlayer(player)
+
+            task.delay(1, function()
+                if not self.Enabled or player.Parent ~= Players then
+                    return
+                end
+
+                local leaderstats = player:FindFirstChild("leaderstats")
+
+                if not leaderstats then
+                    return
+                end
+
+                self:WatchStats(leaderstats)
+
+                local hidden = leaderstats:FindFirstChild("Hidden")
+
+                if hidden and hidden:IsA("Folder") then
+                    self:WatchHidden(hidden)
+                    self:Reveal(hidden)
+                end
+            end)
         end)
 
         table.insert(self.Connections, connection)
