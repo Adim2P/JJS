@@ -31,12 +31,14 @@ local PlayerTracker = import("src/Tracking/PlayerTracker.luau")
 local Trace = import("src/Core/Trace.luau")
 local FastInteract = import("src/Features/FastInteract.luau")
 local ShowHiddenKills = import("src/Features/ShowHiddenKills.luau")
+local TintedVision = import("src/Features/TintedVision.luau")
 
 
 -- Import Initiator
 local State = AppState.new()
 local fastInteract = FastInteract.new()
 local showHiddenKills = ShowHiddenKills.new()
+local tintedVision = TintedVision.new(Config)
 local trace = Trace.new(Config.Debug)
 local blockInput = Input.new(Config, State, trace)
 local defender = AutoBlock.new(Config, State, blockInput, trace)
@@ -59,6 +61,7 @@ local function shutdown()
     blockInput:Stop()
     fastInteract:Stop()
     showHiddenKills:Stop()
+    tintedVision:Stop()
 
     if keyConnection then
         keyConnection:Disconnect()
@@ -84,6 +87,9 @@ menu = Menu.new(Config, State, shutdown,
     end,
     function(enabled)
         showHiddenKills:SetEnabled(enabled)
+    end,
+    function(enabled)
+        return tintedVision:SetEnabled(enabled)
     end
 )
 

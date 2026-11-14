@@ -4,11 +4,14 @@ local Config = {
 
     TrackingRange = 25,
     ScanInterval = 0.2,
+    TintedVisionRange = 300,
+    TintedVisionScanInterval = 0.35,
 
     Features = {
         AutoBlock = false,
         FastInteract = false,
         ShowHiddenKills = false,
+        TintedVision = false,
         ProximityTracking = false,
         DirectionalLock = false,
         DashDetection = false
