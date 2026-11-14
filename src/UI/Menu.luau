@@ -32,7 +32,7 @@ function Menu.new(config, appState, onShutdown, onFastInteractChanged)
 
     local frame = Instance.new("Frame")
     frame.Size = UDim2.fromOffset(200, 140)
-    frame.AnchorPoint = Vector2.new(0.5, 1)
+    frame.AnchorPoint = Vector2.new(0.5, 0)
     frame.Position = UDim2.new(0.5, 0, 0, 20)
     frame.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
     frame.Parent = gui
