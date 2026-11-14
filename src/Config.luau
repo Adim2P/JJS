@@ -8,6 +8,7 @@ local Config = {
     Features = {
         AutoBlock = false,
         FastInteract = false,
+        ShowHiddenKills = false,
         ProximityTracking = false,
         DirectionalLock = false,
         DashDetection = false
