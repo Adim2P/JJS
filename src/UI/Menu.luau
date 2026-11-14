@@ -22,12 +22,14 @@ local function createButton(parent, text, y)
     return button
 end
 
+-- Constructor for adding new features to menu
 function Menu.new(
     config,
     appState,
     onShutdown,
     onFastInteractChanged,
-    onShowHiddenKillsChanged
+    onShowHiddenKillsChanged,
+    onTintedVisionChanged
 )
     local self = setmetatable({}, Menu)
 
@@ -37,7 +39,7 @@ function Menu.new(
     gui.DisplayOrder = 100
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.fromOffset(200, 173)
+    frame.Size = UDim2.fromOffset(200, 204)
     frame.AnchorPoint = Vector2.new(0.5, 0)
     frame.Position = UDim2.new(0.5, 0, 0, 20)
     frame.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
@@ -207,7 +209,40 @@ function Menu.new(
 
     updateKillsCheckbox()
 
-    local shutdownButton = createButton(frame, "Shutdown", 134)
+    local tintedCheckbox = checkbox:Clone()
+    tintedCheckbox.Name = "TintedVisionCheckbox"
+    tintedCheckbox.Position = UDim2.fromOffset(12, 132)
+    tintedCheckbox.Parent = frame
+
+    local tintedLabel = label:Clone()
+    tintedLabel.Text = "Show Cooldowns"
+    tintedLabel.Position = UDim2.fromOffset(36, 129)
+    tintedLabel.Parent = frame
+
+    local tintedCheckmark = tintedCheckbox:FindFirstChildOfClass("TextLabel")
+
+    local function updateTintedCheckbox()
+        local enabled = config.Features.TintedVision
+
+        tintedCheckmark.Visible = enabled
+        tintedCheckbox.BackgroundColor3 = enabled
+            and Color3.fromRGB(241, 242, 243)
+            or Color3.fromRGB(48, 48, 55)
+    end
+
+    tintedCheckbox.Activated:Connect(function()
+        local enabled = not config.Features.TintedVision
+
+        if onTintedVisionChanged(enabled) then
+            config.Features.TintedVision = enabled
+        end
+
+        updateTintedCheckbox()
+    end)
+
+    updateTintedCheckbox()
+
+    local shutdownButton = createButton(frame, "Shutdown", 165)
 
     shutdownButton.Activated:Connect(function()
         print("[Shenanigans] Shutdown button clicked")
