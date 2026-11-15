@@ -7,6 +7,7 @@ function ShowHiddenKills.new()
     local self = setmetatable({}, ShowHiddenKills)
 
     self.Enabled = false
+    self.Generation = 0
     self.Connections = {}
     self.Moved = {}
     self.WatchedPlayers = {}
@@ -43,6 +44,7 @@ function ShowHiddenKills:Reveal(hidden)
         Leaderstats = leaderstats
     }
 
+    print("[HIDDEN] Revealing:", player.Name, kills.ClassName, kills.Value)
     kills.Parent = leaderstats
 end
 
@@ -100,6 +102,29 @@ function ShowHiddenKills:WatchPlayer(player)
 
     table.insert(self.Connections, connection)
 
+    local descendantConnection = player.DescendantAdded:Connect(function(descendant)
+        if descendant.Name ~= "Kills" then
+            return
+        end
+
+        local hidden = descendant.Parent
+
+        if not hidden or not hidden:IsA("Folder") or hidden.Name ~= "Hidden" then
+            return
+        end
+
+        local leaderstats = hidden.Parent
+
+        if not leaderstats or leaderstats.Name ~= "leaderstats"
+            or leaderstats.Parent ~= player then
+            return
+        end
+
+        self:Reveal(hidden)
+    end)
+
+    table.insert(self.Connections, descendantConnection)
+
     local leaderstats = player:FindFirstChild("leaderstats")
 
     if leaderstats then
@@ -113,10 +138,30 @@ function ShowHiddenKills:SetEnabled(enabled)
     end
 
     self.Enabled = enabled
+    self.Generation += 1
+    local generation = self.Generation
 
     if enabled then
         local connection = Players.PlayerAdded:Connect(function(player)
             self:WatchPlayer(player)
+
+            task.spawn(function()
+                for _ = 1, 20 do
+                    task.wait(0.5)
+                    if not self.Enabled or self.Generation ~= generation
+                        or player.Parent ~= Players then
+                        return
+                    end
+
+                    local stats = player:FindFirstChild("leaderstats")
+                    local hidden = stats and stats:FindFirstChild("Hidden")
+                    if hidden and hidden:IsA("Folder") then
+                        self:WatchStats(stats)
+                        self:WatchHidden(hidden)
+                        self:Reveal(hidden)
+                    end
+                end
+            end)
         end)
 
         table.insert(self.Connections, connection)
