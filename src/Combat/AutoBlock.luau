@@ -4,13 +4,14 @@ local LocalPlayer = Players.LocalPlayer
 local AutoBlock = {}
 AutoBlock.__index = AutoBlock
 
-function AutoBlock.new(config, appState, input, trace)
+function AutoBlock.new(config, appState, input, trace, directionalLock)
     local self = setmetatable({}, AutoBlock)
 
     self.Config = config
     self.AppState = appState
     self.Input = input
     self.Trace = trace
+    self.DirectionalLock = directionalLock
 
     return self
 end
@@ -91,6 +92,10 @@ function AutoBlock:OnM1(player, targetCharacter, m1)
     end
 
     local requested = self.Input:PressBlock()
+
+    if requested then
+        self.DirectionalLock:Start(player, targetCharacter)
+    end
 
     if self.Config.Debug then
         self.Trace:Log(

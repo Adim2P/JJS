@@ -13,7 +13,7 @@ local Config = {
         ShowHiddenKills = false,
         TintedVision = false,
         ProximityTracking = false,
-        DirectionalLock = false,
+        DirectionalLock = true,
         DashDetection = false
     },
 
