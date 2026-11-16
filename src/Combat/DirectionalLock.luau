@@ -24,8 +24,7 @@ end
 function DirectionalLock:Update()
     if not self.Input.Holding
         or not self.AppState:IsRunning()
-        or not self.Config.Features.AutoBlock
-        or not self.Config.Features.DirectionalLock then
+        or not self.Config.Features.AutoBlock then
         self:Stop()
         return
     end
@@ -70,7 +69,7 @@ function DirectionalLock:Update()
 end
 
 function DirectionalLock:Start(player, targetCharacter)
-    if not self.Config.Features.DirectionalLock
+    if not self.Config.Features.AutoBlock
         or not self.Input.Holding then
         return
     end
