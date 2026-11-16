@@ -44,7 +44,6 @@ function ShowHiddenKills:Reveal(hidden)
         Leaderstats = leaderstats
     }
 
-    print("[HIDDEN] Revealing:", player.Name, kills.ClassName, kills.Value)
     kills.Parent = leaderstats
 end
 
