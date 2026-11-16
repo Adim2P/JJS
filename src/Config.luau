@@ -16,7 +16,8 @@ local Config = {
         DashDetection = false
     },
 
-    Debug = true
+    Debug = true,
+    M1OutcomeDebug = true
 }
 
 return Config
