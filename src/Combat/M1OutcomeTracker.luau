@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
 
-local WINDOW = 0.65
+local WINDOW = 0.80
 local MIN_REACTION_AGE = 0.08
 
 local M1OutcomeTracker = {}
