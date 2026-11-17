@@ -114,6 +114,14 @@ function M1OutcomeTracker:WatchCharacter(character)
         local id = animation.AnimationId:match("(%d+)$")
         local deflectName = id and self.DeflectIds[id]
 
+        print(
+            "[M1 ANIM]",
+            "name=" .. animation.Name,
+            "id=" .. tostring(id),
+            "mapped=" .. tostring(deflectName),
+            "pending=" .. tostring(#self.Pending)
+        )
+
         if deflectName then
             self:Resolve("BLOCK_CANDIDATE", deflectName)
         end
@@ -203,6 +211,10 @@ function M1OutcomeTracker:Start()
                 self.DeflectIds[id] = instance.Name
             end
         end
+    end
+
+    for id, name in pairs(self.DeflectIds) do
+        print("[M1 DEFLECT REGISTRY]", name, id)
     end
 
     self.Running = true
