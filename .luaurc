@@ -4,6 +4,7 @@
     "isrbxactive",
     "keypress",
     "keyrelease",
-    "getgenv"
+    "getgenv",
+    "decompile"
   ]
 }
