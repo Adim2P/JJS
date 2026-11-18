@@ -1,6 +1,8 @@
 local Config = {
     Range = 8,
     BlockDuration = 0.8,
+    BlockRearmDelay =0.15,
+    AbilityOverrideDuration = 0.65,
 
     TrackingRange = 25,
     ScanInterval = 0.2,

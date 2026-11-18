@@ -13,6 +13,7 @@ function Input.new(config, appState, trace)
     self.Trace = trace
     self.Holding = false
     self.ReleaseAt = 0
+    self.RearmAt = 0
     self.Stopped = false
     self.ManualAttackHeld = false
     self.ManualOverrideUntil = 0
@@ -62,10 +63,25 @@ function Input:ManualM1Ended()
     end
 
     self.ManualAttackHeld = false
-    self.ManualOverrideUntil =
+    self.ManualOverrideUntil = math.max(
+        self.ManualOverrideUntil,
         os.clock() + MANUAL_M1_GRACE
-
+    )
     self.Trace:Log("MANUAL_M1_UP")
+end
+
+function Input:ManualAbilityUsed()
+    if self.Stopped then
+        return
+    end
+
+    self.ManualOverrideUntil = math.max(
+        self.ManualOverrideUntil,
+        os.clock() + self.Config.AbilityOverrideDuration
+    )
+
+    self.Trace:Log("MANUAL_ABILITY_OVERRIDE")
+    self:Release()
 end
 
 function Input:PressBlock()
@@ -81,6 +97,11 @@ function Input:PressBlock()
         or os.clock() < self.ManualOverrideUntil then
 
         self.Trace:Log("INPUT_SKIP", "manual_m1_override")
+        return false
+    end
+
+    if not self.Holding and os.clock() < self.RearmAt then
+        self.Trace:Log("INPUT_SKIP", "block_rearming")
         return false
     end
 
@@ -135,6 +156,7 @@ function Input:Release()
 
     self.Holding = false
     self.ReleaseAt = 0
+    self.RearmAt = os.clock() + self.Config.BlockRearmDelay
 
     if self.Config.Debug then
         print("[AUTOBLOCK] Block released.")

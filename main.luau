@@ -110,6 +110,14 @@ keyConnection = UserInputService.InputBegan:Connect(function(input, processed)
 
         blockInput:ManualM1Started()
 
+    elseif not processed and (
+        input.KeyCode == Enum.KeyCode.One
+        or input.KeyCode == Enum.KeyCode.Two
+        or input.KeyCode == Enum.KeyCode.Three
+        or input.KeyCode == Enum.KeyCode.Four
+    ) then
+    blockInput:ManualAbilityUsed()
+
     elseif input.KeyCode == Enum.KeyCode.F6 then
         print("[Shenanigans] Toggling Overlay")
         menu:Toggle()
