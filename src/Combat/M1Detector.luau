@@ -64,9 +64,15 @@ function M1Detector:Watch(player, character)
             self.AnimationConnections[player] =
                 animator.AnimationPlayed:Connect(function(track)
                     local animation = track.Animation
+                    local priority = track.Priority
 
                     if not animation
-                        or track.Priority.Value < Enum.AnimationPriority.Action.Value then
+                        or (
+                            priority ~= Enum.AnimationPriority.Action
+                            and priority ~= Enum.AnimationPriority.Action2
+                            and priority ~= Enum.AnimationPriority.Action3
+                            and priority ~= Enum.AnimationPriority.Action4
+                        ) then
                         return
                     end
 
