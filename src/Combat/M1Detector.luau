@@ -21,6 +21,8 @@ end
 function M1Detector:Watch(player, character)
     self:Unwatch(player)
 
+    local lastCurrentM1At = nil
+
     local connection =
         character:GetAttributeChangedSignal("CurrentM1"):Connect(function()
             if player.Character ~= character then
@@ -28,6 +30,8 @@ function M1Detector:Watch(player, character)
             end
 
             local m1 = character:GetAttribute("CurrentM1")
+
+            lastCurrentM1At = os.clock()
 
             if self.Debug then
                 self.Trace:Log(
@@ -87,6 +91,17 @@ function M1Detector:Watch(player, character)
                         "ACTION_ANIM",
                         player.Name,
                         "moveset=" .. tostring(moveset),
+                        "name=" .. animation.Name,
+                        "path=" .. animation:GetFullName(),
+                        "priority=" .. track.Priority.Name,
+                        "sinceCurrentM1=" .. (
+                            lastCurrentM1At
+                            and string.format(
+                                "%.1fms",
+                                (os.clock() - lastCurrentM1At) * 1000
+                            )
+                            or "none"
+                        ),
                         "id=" .. tostring(id),
                         "knownM1=" .. tostring(knownM1),
                         "CurrentM1=" .. tostring(character:GetAttribute("CurrentM1")),
